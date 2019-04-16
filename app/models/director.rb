@@ -12,4 +12,6 @@
 #
 
 class Director < ApplicationRecord
+    # this creates a method called .movies for director objects, looks for values in Movie table with director_id key
+    has_many :movies, :class_name => "Movie", :foreign_key => "director_id"
 end

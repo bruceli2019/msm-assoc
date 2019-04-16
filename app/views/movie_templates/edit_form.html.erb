@@ -1,3 +1,20 @@
+<!--add error messages if movie wasn't created-->
+
+<% if @movie.present? %>
+  <!--note that this is simply an array, we loop through and display each message-->
+
+  <% @movie.errors.full_messages.each do |message| %>
+    <!--use Bootstrap to make alerts look pretty-->
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= message %>
+      
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <% end %>
+<% end %>
+
 <h1>
   Edit movie #<%= @movie.id %>
 </h1>
@@ -48,6 +65,32 @@
     </label>
 
     <input type="text" id="image_url" name="image_url" class="form-control" value="<%= @movie.image_url %>">
+  </div>
+  
+  <!-- Label and input for director_id -->
+  <div class="form-group">
+    <label for="director_id">
+      Director
+    </label>
+
+    <%= select_tag(
+      #this is what is extracted from the params hash
+      "director_id", 
+      #this writes our option tags
+      options_from_collection_for_select(
+        #give it a list of all the directors
+        Director.all, 
+        #this is what goes into the value attribute of the <option> tag
+        :id, 
+        #this is what is displayed to the user
+        :name, 
+        #tries to run the director_id method on @movie, if it fails then it fails silently 
+        #we only send down @movie when something go wrong or we create @moive
+        @movie.try(:director_id)), 
+      #the CSS to format
+      :class => "form-control") 
+    %>
+    or <a href = "/directors/new">Add a new director</a> first.
   </div>
 
   <button class="btn btn-block btn-outline-secondary">

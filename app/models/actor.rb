@@ -12,4 +12,6 @@
 #
 
 class Actor < ApplicationRecord
+    # simplifies the movie counting code
+    has_many :roles, :class_name => "Character", :foreign_key => "actor_id"
 end

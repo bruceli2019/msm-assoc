@@ -29,6 +29,10 @@
     <th>
       Description
     </th>
+    
+    <th>
+      Director
+    </th>
 
     <th>
     </th>
@@ -54,6 +58,14 @@
 
     <td>
       <%= movie.description %>
+    </td>
+    
+    <td>
+      <!--this makes a clickable link to the directors page-->
+      <a href = "/directors/<%=movie.director_id%>">
+        <!--this finds the Director within the table, and adds the name -->
+        <%= movie.director.name %>
+      </a>
     </td>
 
     <td>

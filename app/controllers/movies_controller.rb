@@ -23,9 +23,17 @@ class MoviesController < ApplicationController
     @movie.duration = params.fetch("duration")
     @movie.description = params.fetch("description")
     @movie.image_url = params.fetch("image_url")
-    @movie.save
+    @movie.director_id = params.fetch("director_id")
+    
+    #prevent users from saving blank movies -- checks all the validations in movie.rb
+    if @movie.valid?
+      @movie.save
+      redirect_to("/movies", :notice => "Movie created successfully.")
+    else
+      #re-render the form if the title is blank
+      render("movie_templates/new_form.html.erb")
+    end
 
-    redirect_to("/movies", :notice => "Movie created successfully.")
   end
 
   def edit_form
@@ -42,9 +50,17 @@ class MoviesController < ApplicationController
     @movie.duration = params.fetch("duration")
     @movie.description = params.fetch("description")
     @movie.image_url = params.fetch("image_url")
-    @movie.save
+    @movie.director_id = params.fetch("director_id")
 
-    redirect_to("/movies/#{@movie.id}", :notice => "Movie updated successfully.")
+    
+    if @movie.valid?
+      @movie.save
+      redirect_to("/movies/#{@movie.id}", :notice => "Movie updated successfully.")
+    else
+      render("movie_templates/edit_form.html.erb")
+    end
+
+
   end
 
   def destroy_row

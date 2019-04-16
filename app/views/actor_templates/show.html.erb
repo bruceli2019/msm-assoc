@@ -36,6 +36,15 @@
   <dd>
     <img src="<%= @actor.image_url %>" width="320">
   </dd>
+  
+  <dt>
+    Number of films
+  </dt>
+  <dd>
+    <!--see app/models/actor.rb for reason why we do code shorthand-->
+    <!--otherwise, need Character.where(actor_id: @actor.id).count-->
+    <%= @actor.roles.count %>
+  </dd>
 
 </dl>
 
@@ -48,3 +57,63 @@
 <a href="/actors">
   Go back
 </a>
+
+<div class="card mt-4">
+  <div class="card-header">
+    Filmography
+  </div>
+  <ul class="list-group list-group-flush">
+    <!--loop through all movies and display the ones where the current director is involved-->
+    <!--recall actor.roles is simply Character.where(actor_id: @actor.id), a role is a character-->
+    <% @actor.roles.each do |role| %>
+      <li class="list-group-item">
+        <a href = "/movies/<%= role.movie_id%>"> 
+          <!--want the movie, extract the movie_id from the character 'role', then find it in Movie table, then get the title-->
+          <%= Movie.find(role.movie_id).title %> 
+        </a>
+        <!--want the actual role-->
+        (<%= role.name %>)
+      </li>
+    <% end %>
+  </ul>
+   
+  <!--add a form-->
+  <div class="card-header">
+    Add a new role for this actor
+  </div>
+  
+  <ul class="list-group">
+    <li class = "list-group-item">
+      <!--now that we use post in create_character, need to specify the post method-->
+      <form action="/create_character" method = "post">
+        <!-- Label and input for name-->
+        <div class="form-group">
+          <label for="name">
+            Name
+          </label>
+      
+          <input type="text" id="name" name="name" class="form-control">
+        </div>
+      
+        <!-- Label and input for movie-->
+        <div class="form-group">
+          <label for="year">
+            Year
+          </label>
+      
+          <%= select_tag("movie_id", options_from_collection_for_select(Movie.all, :id, :title, @character.try(:movie_id)), :class => "form-control") %>
+          or <a href = "/movies/new">Add a new movie</a> first
+        </div>
+      
+        <!-- Label and input for actor_id -->     
+        <!--this is hidden from the user--> 
+        <input type = "hidden" name = "actor_id" value = "<%= @actor.id %>">
+      
+        <button class="btn btn-block btn-outline-secondary">
+          Create character
+        </button>
+      </form>
+    </li>
+  </ul>
+  
+</div>
